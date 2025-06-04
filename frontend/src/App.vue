@@ -4,13 +4,17 @@
 
 <script setup lang="ts">
 import { onMounted } from 'vue'
-import axios from "axios";
-
+import axios from 'axios';
+axios.defaults.baseURL = '/api'
+const token = localStorage.getItem('token')
+if(token) {
+	axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
 let onlinePingInterval: ReturnType<typeof setInterval> | null = null
 
 async function setOnline() {
   try {
-    await axios.post('/me/online')
+    await axios.post('/api/me/online')
     console.log('[DEBUG] online ping sent')
   } catch (err) {
     console.error('❌ setOnline failed:', err)
@@ -19,7 +23,7 @@ async function setOnline() {
 
 async function setOffline() {
   try {
-    await axios.post('/me/offline', {}, {
+    await axios.post('/api/me/offline', {}, {
       headers: {
         // `keepalive` jest obsługiwane tylko w `fetch`, więc to symboliczne
       }

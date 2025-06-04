@@ -718,7 +718,7 @@ const apiCall = async (url, options = {}) => {
     ...options.headers,
   };
 
-  const response = await fetch(`http://localhost:8080${url}`, {
+  const response = await fetch(`http://188.245.239.124:8080/api${url}`, {
     ...options,
     headers,
   });

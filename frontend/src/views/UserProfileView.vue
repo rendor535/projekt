@@ -462,7 +462,7 @@ const saveProfile = async () => {
       goal:           editForm.value.goal
     }
 
-    const res = await axios.post('/profile', payload, {
+    const res = await axios.post('/api/profile', payload, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -496,7 +496,7 @@ const loadProfile = async () => {
       return
     }
 
-    const res = await axios.get('/profile', {
+    const res = await axios.get('/api/profile', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
 
@@ -525,7 +525,7 @@ const loadCurrentUser = async () => {
     }
 
     // Fallback to API call
-    const res = await axios.get('/me', {
+    const res = await axios.get('/api/me', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
 

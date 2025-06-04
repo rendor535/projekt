@@ -317,7 +317,7 @@ import { useRouter } from 'vue-router'
 
 const store = useAuthStore()
 const router = useRouter()
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://188.245.239.124:8080/api'
 
 // Inject the switchToView function from parent component (PanelView)
 const switchToView = inject('switchToView')

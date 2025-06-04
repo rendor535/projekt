@@ -1,0 +1,15 @@
+package app
+
+import (
+	"backend/internal/domain/repositories"
+	"backend/internal/handlers"
+	"backend/internal/middleware"
+	"database/sql"
+	"github.com/gin-gonic/gin"
+)
+
+func SetupMiddleware(router *gin.Engine) {
+	router.Use(middleware.CORSMiddleware())
+}
+
+

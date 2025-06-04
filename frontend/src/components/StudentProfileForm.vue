@@ -58,12 +58,12 @@ const emit = defineEmits(['saved'])
 async function submitProfile() {
   try {
     console.log('Profil do wysłania:', JSON.stringify(profile.value)); // <— tutaj
-    const response = await axios.post('/profile', profile.value);
+    const response = await axios.post('/api/profile', profile.value);
     console.log('Odpowiedź:', response.data);
     emit('saved', profile.value);
   } catch (e) {
     console.error('Nie udało się zapisać profilu', e);
-    console.error('Szczegóły błędu:', e.response?.data);
+    console.error('Szczegóły błędu:', (e as any).response?.data);
   }
 }
 </script>

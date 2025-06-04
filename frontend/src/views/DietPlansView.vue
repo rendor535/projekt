@@ -491,7 +491,7 @@ import { useAuthStore } from '@/stores/auth'
 const store = useAuthStore()
 
 // API Configuration
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://188.245.239.124:8080/api'
 
 // State variables
 const loading = ref(true)

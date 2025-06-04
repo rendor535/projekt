@@ -179,7 +179,7 @@ let checkUnreadInterval = null
 // Pobierz listę uczniów (dla trenera) lub partnera czatu (dla ucznia)
 const loadChatPartners = async () => {
   try {
-    const response = await axios.get('/messages/partners')
+    const response = await axios.get('/api/messages/partners')
 
     if (store.user?.role === 'trainer') {
       students.value = response.data.map(partner => ({
@@ -223,7 +223,7 @@ const checkForNewMessages = async () => {
 
   try {
     // Sprawdź tylko najnowszą wiadomość
-    const response = await axios.get(`/messages/conversation/${selectedStudentId.value}?limit=1&after=${lastMessageId.value}`)
+    const response = await axios.get(`/api/messages/conversation/${selectedStudentId.value}?limit=1&after=${lastMessageId.value}`)
 
     if (response.data && response.data.length > 0) {
       const newMessages = response.data.filter(msg => msg.id > lastMessageId.value)
@@ -260,7 +260,7 @@ const checkUnreadMessages = async () => {
 
   try {
     for (let student of students.value) {
-      const response = await axios.get('/messages/unread', {
+      const response = await axios.get('/api/messages/unread', {
         params: { sender_id: student.id }
       })
 
@@ -285,7 +285,7 @@ const checkUnreadMessages = async () => {
 // Pobierz ostatnią wiadomość dla ucznia
 const loadLastMessage = async (userId, student) => {
   try {
-    const response = await axios.get(`/messages/conversation/${userId}?limit=1`)
+    const response = await axios.get(`/api/messages/conversation/${userId}?limit=1`)
     if (response.data && response.data.length > 0) {
       student.lastMessage = response.data[response.data.length - 1].content
     }
@@ -297,7 +297,7 @@ const loadLastMessage = async (userId, student) => {
 // Pobierz liczbę nieprzeczytanych wiadomości
 const loadUnreadCount = async (userId, student = null) => {
   try {
-    const response = await axios.get('/messages/unread', {
+    const response = await axios.get('/api/messages/unread', {
       params: { sender_id: userId }
     })
 
@@ -316,7 +316,7 @@ const selectStudent = async (student) => {
   selectedStudentId.value = student.id
   chatPartner.value = student.username
   isPartnerOnline.value = student.is_online
-  await axios.put(`/messages/conversation/${student.id}/read`)
+  await axios.put(`/api/messages/conversation/${student.id}/read`)
   // Oznacz wiadomości jako przeczytane
   await markMessagesAsRead(student.id)
 
@@ -339,7 +339,7 @@ const selectStudent = async (student) => {
 const loadConversation = async (partnerId) => {
   loading.value = true
   try {
-    const response = await axios.get(`/messages/conversation/${partnerId}`)
+    const response = await axios.get(`/api/messages/conversation/${partnerId}`)
     messages.value = response.data || []
 
     // Ustaw ID ostatniej wiadomości
@@ -350,7 +350,7 @@ const loadConversation = async (partnerId) => {
     // Przewiń do najnowszej wiadomości
     await nextTick()
     scrollToBottom()
-    await axios.put(`/messages/conversation/${partnerId}/read`)
+    await axios.put(`/api/messages/conversation/${partnerId}/read`)
     localStorage.setItem('messagesCleared', 'true')
     isConnected.value = true
   } catch (error) {
@@ -374,7 +374,7 @@ const sendMessage = async () => {
   const messageText = newMessage.value.trim()
 
   try {
-    const response = await axios.post('/messages', {
+    const response = await axios.post('/api/messages', {
       receiver_id: receiverId,
       content: messageText
     })
@@ -420,7 +420,7 @@ const sendMessage = async () => {
 // Oznacz jedną wiadomość jako przeczytaną
 const markMessageAsRead = async (messageId) => {
   try {
-    await axios.put(`/messages/${messageId}/read`)
+    await axios.put(`/api/messages/${messageId}/read`)
 
     // Aktualizuj lokalnie
     const message = messages.value.find(m => m.id === messageId)

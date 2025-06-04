@@ -413,7 +413,7 @@ const experienceLevel = computed(() => {
 })
 
 // API base URL
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://188.245.239.124:8080/api'
 
 // API utility function
 const apiRequest = async (url, options = {}) => {

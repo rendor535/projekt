@@ -220,7 +220,7 @@ async function calculate() {
   }
 
   try {
-    const res = await axios.post('/calculate', { items })
+    const res = await axios.post('/api/calculate', { items })
     result.value = res.data
     await nextTick()
     drawPieChart()
@@ -235,7 +235,7 @@ watch(result, () => {
 
 onMounted(async () => {
   try {
-    const res = await axios.get('/products')
+    const res = await axios.get('/api/products')
     products.value = res.data
     calculate()
   } catch (error) {

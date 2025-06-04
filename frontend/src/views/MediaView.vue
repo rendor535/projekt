@@ -48,7 +48,7 @@
                 <input
                     v-model="searchQuery"
                     type="text"
-                    placeholder="Szukaj ćwiczenia..."
+                    placeholder="Szuka/optj ćwiczenia..."
                     class="search-input"
                 >
               </div>
@@ -321,7 +321,7 @@ const apiRequest = async (url, options = {}) => {
     }
   }
 
-  const response = await fetch(`http://localhost:8080${url}`, finalOptions)
+  const response = await fetch(`http://188.245.239.124:8080/api${url}`, finalOptions)
 
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)

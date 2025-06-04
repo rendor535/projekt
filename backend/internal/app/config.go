@@ -1,5 +1,4 @@
 package app
-
 import (
 	"backend/internal/domain/repositories"
 	"backend/internal/handlers"
@@ -16,20 +15,21 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "Backend is up and running"})
 	})
-
+	api := router.Group("/api")
+	{
 	// Auth routes
 	auth := handlers.NewAuthHandler(db)
-	router.POST("/register", auth.Register)
-	router.POST("/login", auth.Login)
-	router.GET("/me", middleware.AuthMiddleware(), auth.Me)
+	api.POST("/register", auth.Register)
+	api.POST("/login", auth.Login)
+	api.GET("/me", middleware.AuthMiddleware(), auth.Me)
 	// User status handler
 	userHandler := handlers.NewUserHandler(db)
-	router.POST("/me/online", middleware.AuthMiddleware(), userHandler.SetOnline)
-	router.POST("/me/offline", middleware.AuthMiddleware(), userHandler.SetOffline)
+	api.POST("/me/online", middleware.AuthMiddleware(), userHandler.SetOnline)
+	api.POST("/me/offline", middleware.AuthMiddleware(), userHandler.SetOffline)
 	// Profile routes
 	profileRepo := repositories.NewProfileRepository(db)
 	profileHandler := handlers.NewProfileHandler(profileRepo, db) // Dodaj db jako drugi parametr
-	authGroup := router.Group("/profile")
+	authGroup := api.Group("/profile")
 	authGroup.Use(middleware.AuthMiddleware())
 	{
 		authGroup.GET("", profileHandler.GetProfile)
@@ -40,7 +40,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	trainerProfileRepo := repositories.NewTrainerProfileRepository(db)
 	trainerProfileHandler := handlers.NewTrainerProfileHandler(trainerProfileRepo)
 
-	trainerGroup := router.Group("/trainer-profile")
+	trainerGroup := api.Group("/trainer-profile")
 	trainerGroup.Use(middleware.AuthMiddleware())
 	{
 		trainerGroup.GET("", trainerProfileHandler.GetProfile)
@@ -53,7 +53,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	trainingPlanRepo := repositories.NewTrainingPlanRepository(db)
 	trainingPlanHandler := handlers.NewTrainingPlanHandler(trainingPlanRepo)
 
-	trainingGroup := router.Group("/training-plans")
+	trainingGroup := api.Group("/training-plans")
 	trainingGroup.Use(middleware.AuthMiddleware())
 	{
 		// Pobieranie planów
@@ -89,16 +89,16 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 
 	// Calculator route
 	calculator := handlers.NewCalculatorHandler(db)
-	router.POST("/calculate", middleware.AuthMiddleware(), calculator.Calculate)
+	api.POST("/calculate", middleware.AuthMiddleware(), calculator.Calculate)
 
 	// Product routes
 	productHandler := handlers.NewProductHandler(db)
-	router.GET("/products", middleware.AuthMiddleware(), productHandler.List)
+	api.GET("/products", middleware.AuthMiddleware(), productHandler.List)
 
 	// Message routes
 	messageRepo := repositories.NewMessageRepository(db)
 	messageHandler := handlers.NewMessageHandler(messageRepo)
-	messageGroup := router.Group("/messages")
+	messageGroup := api.Group("/messages")
 	messageGroup.Use(middleware.AuthMiddleware())
 	{
 		messageGroup.POST("", messageHandler.SendMessage)
@@ -114,15 +114,15 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	trainerTraineeRepo := repositories.NewTrainerTraineeRepository(db)
 	trainerTraineeHandler := handlers.NewTrainerTraineeHandler(trainerTraineeRepo)
 
-	router.POST("/trainees/assign", middleware.AuthMiddleware(), trainerTraineeHandler.AssignTrainee)
-	router.GET("/trainees", middleware.AuthMiddleware(), trainerTraineeHandler.GetTrainees)
-	router.DELETE("/trainees/:traineeID", middleware.AuthMiddleware(), trainerTraineeHandler.RemoveTrainee)
-	router.GET("/my-trainer", middleware.AuthMiddleware(), trainerTraineeHandler.GetMyTrainer)
+	api.POST("/trainees/assign", middleware.AuthMiddleware(), trainerTraineeHandler.AssignTrainee)
+	api.GET("/trainees", middleware.AuthMiddleware(), trainerTraineeHandler.GetTrainees)
+	api.DELETE("/trainees/:traineeID", middleware.AuthMiddleware(), trainerTraineeHandler.RemoveTrainee)
+	api.GET("/my-trainer", middleware.AuthMiddleware(), trainerTraineeHandler.GetMyTrainer)
 
 	// NEW: Trainer Request routes for TraineeDashboard functionality
 	trainerRequestRepo := repositories.NewTrainerRequestRepository(db)
 	trainerRequestHandler := handlers.NewTrainerRequestHandler(trainerRequestRepo)
-	trainerRequestGroup := router.Group("/trainer-requests")
+	trainerRequestGroup := api.Group("/trainer-requests")
 	trainerRequestGroup.Use(middleware.AuthMiddleware())
 	{
 		trainerRequestGroup.POST("", trainerRequestHandler.SendRequest)
@@ -136,13 +136,13 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	}
 
 	// Trainer search route (publicly accessible for registered users)
-	router.GET("/trainers/search", middleware.AuthMiddleware(), trainerRequestHandler.SearchTrainers)
+	api.GET("/trainers/search", middleware.AuthMiddleware(), trainerRequestHandler.SearchTrainers)
 
 	// NEW: Progress Report routes
 	progressReportRepo := repositories.NewProgressReportRepository(db)
 	progressReportHandler := handlers.NewProgressReportHandler(progressReportRepo)
 
-	reportsGroup := router.Group("/reports")
+	reportsGroup := api.Group("/reports")
 	reportsGroup.Use(middleware.AuthMiddleware())
 	{
 		reportsGroup.POST("/", progressReportHandler.Create)
@@ -161,7 +161,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	mediaRepo := repositories.NewUserMediaRepository(db)
 	mediaHandler := handlers.NewUserMediaHandler(mediaRepo, db)
 
-	mediaGroup := router.Group("/media")
+	mediaGroup := api.Group("/media")
 	mediaGroup.Use(middleware.AuthMiddleware())
 	{
 		mediaGroup.POST("/upload", mediaHandler.Upload)
@@ -178,7 +178,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 	dietPlanRepo := repositories.NewDietPlanRepository(db)
 	dietPlanHandler := handlers.NewDietPlanHandler(dietPlanRepo)
 
-	dietGroup := router.Group("/diet-plans")
+	dietGroup := api.Group("/diet-plans")
 	dietGroup.Use(middleware.AuthMiddleware())
 	{
 		// Trainer endpoints
@@ -200,7 +200,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 		dietGroup.PUT("/:id/activate", dietPlanHandler.ActivateDietPlan)
 	}
 	notificationHandler := handlers.NewNotificationHandler(db)
-	notifGroup := router.Group("/")
+	notifGroup := api.Group("/")
 	notifGroup.Use(middleware.AuthMiddleware())
 	{
 		// Endpointy dla powiadomień
@@ -208,6 +208,7 @@ func SetupRoutes(router *gin.Engine, db *sql.DB) {
 		notifGroup.GET("/media/trainee/:traineeId/unread", notificationHandler.GetUnreadMediaCount)
 		notifGroup.GET("/diet-plans/trainee/:traineeId/pending-feedback", notificationHandler.GetPendingDietFeedbackCount)
 		notifGroup.GET("/reports/trainer/pending", notificationHandler.GetTrainerPendingReportsCount)
+	}
 	}
 
 }

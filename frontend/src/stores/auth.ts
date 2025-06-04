@@ -1,7 +1,11 @@
 // Zaktualizowany auth store z dodatkowymi getterami dla training plans
 import { defineStore } from 'pinia'
 import axios from 'axios'
-
+axios.defaults.baseURL = '/api'
+const token = localStorage.getItem('token')
+if(token) {
+	axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+}
 export interface User {
     id: number;
     username: string;
@@ -36,7 +40,7 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async login(data: { username: string; password: string }) {
-            const res = await axios.post('http://localhost:8080/login', data)
+            const res = await axios.post('/api/login', data)
 
             this.token = res.data.token
             this.user = res.data.user
@@ -51,7 +55,7 @@ export const useAuthStore = defineStore('auth', {
 
         async register(data: { username: string; password: string; role: string }) {
             const lowercaseRole = data.role.toLowerCase()
-            await axios.post('http://localhost:8080/register', {
+            await axios.post('/api/register', {
                 username: data.username,
                 password: data.password,
                 role: lowercaseRole
@@ -64,7 +68,7 @@ export const useAuthStore = defineStore('auth', {
 
         async fetchUser() {
             try {
-                const res = await axios.get('/me')
+                const res = await axios.get('/api/me')
                 this.user = {
                     id: res.data.userID,
                     role: res.data.role,
@@ -85,7 +89,7 @@ export const useAuthStore = defineStore('auth', {
 
         async fetchProfile() {
             try {
-                const res = await axios.get('/profile')
+                const res = await axios.get('/api/profile')
                 this.profile = res.data.profile
             } catch (e) {
                 console.error('Error fetching profile:', e)

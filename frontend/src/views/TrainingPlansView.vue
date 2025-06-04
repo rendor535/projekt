@@ -866,7 +866,7 @@ export default {
         throw new Error('Brak tokenu autoryzacji')
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}${url}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://188.245.239.124:8080/api'}${url}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,

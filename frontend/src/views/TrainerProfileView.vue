@@ -365,7 +365,7 @@ const saveTrainerProfile = async () => {
       throw new Error('Brak tokenu autoryzacji')
     }
 
-    const response = await axios.post('/trainer-profile', editForm.value, {
+    const response = await axios.post('/api/trainer-profile', editForm.value, {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
@@ -405,7 +405,7 @@ const loadTrainerProfile = async () => {
       return
     }
 
-    const response = await axios.get('/trainer-profile', {
+    const response = await axios.get('/api/trainer-profile', {
       headers: { 'Authorization': `Bearer ${token}` }
     })
 

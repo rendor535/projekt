@@ -49,7 +49,7 @@ func main() {
 		port = "8080"
 	}
 	log.Println("[APP] Server listening on " + port)
-	if err := router.Run(":" + port); err != nil {
+	if err := router.Run("0.0.0.0:" + port); err != nil {
 		log.Fatalf("[APP] Server failed: %v", err)
 	}
 }
