@@ -1,4 +1,4 @@
-<template>
+F<template>
   <div class="profile-wrapper">
     <div class="profile-view">
       <!-- Profile Card with Avatar and Basic Info -->
@@ -245,9 +245,9 @@
             <select v-model.number="editForm.activity_level" required>
               <option value="">Wybierz poziom</option>
               <option value="1.2">Siedzący tryb życia</option>
-              <option value="1.375">Lekka aktywność (1-3 dni/tydzień)</option>
+              <option value="1.38">Lekka aktywność (1-3 dni/tydzień)</option>
               <option value="1.55">Umiarkowana aktywność (3-5 dni/tydzień)</option>
-              <option value="1.725">Wysoka aktywność (6-7 dni/tydzień)</option>
+              <option value="1.73">Wysoka aktywność (6-7 dni/tydzień)</option>
               <option value="1.9">Bardzo wysoka aktywność (2x dziennie)</option>
             </select>
           </div>
@@ -328,20 +328,31 @@ const generateNewAvatar = () => {
 const getGenderText = gender => ({ male:'Mężczyzna', female:'Kobieta' })[gender] || gender
 const getActivityText = level => ({
   1.2:'Siedzący tryb',
-  1.375:'Lekka aktywność',
+  1.38:'Lekka aktywność',
   1.55:'Umiarkowana aktywność',
-  1.725:'Wysoka aktywność',
+  1.73:'Wysoka aktywność',
   1.9:'Bardzo wysoka aktywność'
 }[level] || `Poziom ${level}`)
+
 const getGoalText = goal => ({
-  reduction:'Utrata wagi',
-  recomposition:'Rekompozycja ciała',
-  mass:'Przyrost masy',
-  'Utrata wagi':'Utrata wagi',
-  'Utrzymanie wagi':'Utrzymanie wagi',
-  'Przyrost masy':'Przyrost masy',
-  'Budowanie mięśni':'Budowanie mięśni',
-  'Rekompozycja':'Rekompozycja ciała'
+  // Angielskie klucze
+  reduction: 'Utrata wagi',
+  recomposition: 'Rekompozycja ciała', 
+  mass: 'Przyrost masy',
+  
+  // Klucze z podkreślnikami (prawdopodobnie z bazy danych)
+  'utrata_wagi': 'Utrata wagi',
+  'utrzymanie_wagi': 'Utrzymanie wagi',
+  'przyrost_masy': 'Przyrost masy',
+  'budowanie_miesni': 'Budowanie mięśni',
+  'rekompozycja_ciala': 'Rekompozycja ciała',
+  
+  // Polskie teksty (z formularza)
+  'Utrata wagi': 'Utrata wagi',
+  'Utrzymanie wagi': 'Utrzymanie wagi', 
+  'Przyrost masy': 'Przyrost masy',
+  'Budowanie mięśni': 'Budowanie mięśni',
+  'Rekompozycja': 'Rekompozycja ciała'
 }[goal] || goal || 'Nie ustawiono')
 
 // Calculations...
